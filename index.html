@@ -1,57 +1,37 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini App Game</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        button {
-            padding: 20px 40px;
-            font-size: 22px;
-            font-weight: bold;
-            border: none;
-            border-radius: 16px;
-            background-color: #0088cc;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
-        }
-        button:active {
-            transform: scale(0.95);
-        }
-    </style>
-</head>
-<body>
-    <h1>Кликер в Telegram</h1>
-    <h2>Очки: <span id="score">0</span></h2>
-    <button id="clickBtn">КЛИК!</button>
+<!-- Подключаем официальный скрипт Telegram Web App -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+<button onclick="buyItemWithStars()">Купить кейс за ⭐️ Stars</button>
 
-        let score = 0;
-        const scoreEl = document.getElementById('score');
-        const btn = document.getElementById('clickBtn');
+<script>
+  // Инициализация Telegram Web App
+  let tg = window.Telegram.WebApp;
+  tg.expand(); // Разворачиваем на весь экран
 
-        btn.addEventListener('click', () => {
-            score++;
-            scoreEl.textContent = score;
-            if (tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('medium');
-            }
-        });
-    </script>
-</body>
-</html>
+  function buyItemWithStars() {
+    // Внимание: ссылку на инвойс (invoiceLink) обычно создает бот-бэкенд 
+    // при запросе от игры, либо вы можете передать готовый тестовый инвойс.
+    
+    // Пример запроса к вашему боту за ссылкой на оплату:
+    fetch('https://ваш-сервер-или-бот/create-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: tg.initDataUnsafe.user.id, item: 'case_1' })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.invoiceLink) {
+            // Открываем нативное окно оплаты звёздами в Telegram
+            tg.openInvoice(data.invoiceLink, function(status) {
+                if (status === 'paid') {
+                    alert('Оплата прошла успешно! Кейс добавлен.');
+                    // Здесь код выдачи награды игроку
+                } else if (status === 'cancelled') {
+                    console.лох('Оплата отменена пользователем');
+                }
+            });
+        }
+    })
+    .catch(error => console.error('Ошибка создания инвойса:', error));
+  }
+</script>
