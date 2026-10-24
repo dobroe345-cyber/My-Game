@@ -15,7 +15,6 @@ concurrency:
 
 jobs:
   build:
-  # Используем чистый линукс-сервер от GitHub для компиляции
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -24,25 +23,25 @@ jobs:
       - name: Setup Emscripten SDK
         uses: mymindstorm/setup-emsdk@v14
         with:
-          version: latest
+          version: 3.1.52
 
       - name: Get Raylib source
         run: |
-          git clone --depth 1 https://github.com/raysan5/raylib.git raylib
+          git clone --depth 1 --branch 5.0 https://github.com/raysan5/raylib.git raylib
 
-      - name: Build Raylib for Web
-        run: |
-          cd raylib/src
-          emmake make PLATFORM=PLATFORM_WEB -j4
-          cd ../..
-
-      - name: Compile C++ main.cpp to WebAssembly
+      - name: Compile C++ main.cpp and Raylib directly to WebAssembly
         run: |
           mkdir -p dist
-          emcc main.cpp -o dist/index.html \
+          emcc main.cpp \
+            raylib/src/rcore.c \
+            raylib/src/rshapes.c \
+            raylib/src/rtext.c \
+            raylib/src/rtextures.c \
+            raylib/src/utils.c \
+            -o dist/index.html \
             -O3 -Wall \
             -Iraylib/src \
-            raylib/src/libraylib.a \
+            -DPLATFORM_WEB \
             -s USE_GLFW=3 \
             -s WASM=1 \
             -s ALLOW_MEMORY_GROWTH=1 \
