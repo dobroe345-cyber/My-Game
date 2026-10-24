@@ -712,7 +712,7 @@ int main() {
     printf("WebGL2 недоступен\n");
     return 1;
   }
-  emscripten_webgl_make_current(g_ctx);
+  emscripten_webgl_make_context_current(g_ctx);
 
   g_sun = normalize({0.5f, 0.7f, 0.35f});
   buildWorld();
