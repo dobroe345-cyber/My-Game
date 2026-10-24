@@ -2,26 +2,24 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <!-- Настройка масштаба для мобильных устройств -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>BrainRot Game</title>
-
-  <!-- Подключаем официальный скрипт Telegram Web App -->
+  
+  <!-- Подключаем Telegram Web App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
-    /* Растягиваем игру на весь экран */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none; /* Запрет выделения текста на мобилке */
+      user-select: none;
     }
 
     html, body {
       width: 100%;
       height: 100vh;
-      overflow: hidden; /* Убираем скроллбар */
+      overflow: hidden;
       background-color: #121212;
       color: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -29,61 +27,60 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      gap: 20px;
     }
 
-    /* Стиль красивой кнопки покупки */
-    .stars-btn {
-      background: linear-gradient(135deg, #ff9900, #ff5500);
-      color: #ffffff;
-      border: none;
-      padding: 16px 28px;
+    h2 {
+      font-size: 24px;
+      text-align: center;
+    }
+
+    /* Красивая кнопка Monobank */
+    .mono-btn {
+      width: 85%;
+      max-width: 320px;
+      padding: 18px 20px;
       font-size: 18px;
       font-weight: bold;
-      border-radius: 14px;
+      border: none;
+      border-radius: 16px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 153, 0, 0.4);
+      color: #ffffff;
+      background: linear-gradient(135deg, #e52d27, #b31217);
+      box-shadow: 0 4px 15px rgba(229, 45, 39, 0.4);
       transition: transform 0.1s ease;
+      text-align: center;
     }
 
-    .stars-btn:active {
+    .mono-btn:active {
       transform: scale(0.95);
     }
   </style>
 </head>
 <body>
 
-  <!-- Кнопка покупки -->
-  <button class="stars-btn" onclick="buyCase()">
-    Купить кейс за ⭐️ Stars
+  <h2>🧠 BrainRot Clicker</h2>
+
+  <!-- Кнопка оплаты -->
+  <button class="mono-btn" onclick="openMono()">
+    💳 Задонатить / Купить кейс
   </button>
 
   <script>
-    // 1. Инициализируем Telegram Web App
     let tg = window.Telegram.WebApp;
-
-    // 2. РАЗВОРАЧИВАЕМ НА ВЕСЬ ЭКРАН
+    
+    // Разворачиваем игру на весь экран
     tg.expand();
-
-    // 3. Сообщаем Telegram, что приложение готово к отображению
     tg.ready();
 
-    // Функция нажатия на кнопку оплаты
-    function buyCase() {
-      // Покажем модальное окно с подтверждением от Telegram
-      tg.showConfirm("Вы хотите купить кейс за 10 Stars?", function(confirmed) {
-        if (confirmed) {
-          /* 
-            Когда у вас будет бэкенд на Python/Node.js, тут вызывается openInvoice:
-            tg.openInvoice("ССЫЛКА_НА_ИНВОЙС_ИЗ_BOT_API", function(status) {
-              if (status === 'paid') {
-                tg.showAlert("Кейс успешно куплен!");
-              }
-            });
-          */
-          tg.showAlert("Для проведения реального платежа потребуется сервер бота, который создает инвойс!");
-        }
-      });
+    function openMono() {
+      // Твоя ссылка на Банку Monobank
+      let monoUrl = "https://send.monobank.ua/jar/TA9hxgAzA"; 
+
+      // Перенаправляем игрока на страницу оплаты
+      tg.openLink(monoUrl);
     }
   </script>
+
 </body>
 </html>
