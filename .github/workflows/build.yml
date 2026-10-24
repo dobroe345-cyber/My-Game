@@ -25,7 +25,7 @@ jobs:
       - name: Build (C++ -> WebAssembly)
         run: |
           mkdir -p dist
-          emcc main.cpp -std=c++17 -O3 -ffast-math -flto \
+          em++ main.cpp -std=c++17 -O3 -ffast-math -flto \
             -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 \
             -sALLOW_MEMORY_GROWTH=1 -sENVIRONMENT=web \
             --shell-file shell.html \
