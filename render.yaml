@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: brainrot-vault
+    runtime: python
+    plan: starter            # платный тариф: сервис не засыпает и можно подключить диск
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    healthCheckPath: /healthz
+    envVars:
+      - key: BOT_TOKEN
+        sync: false          # вставишь токен в панели Render
+      - key: OWNER_USERNAME
+        value: Tuke5669
+      - key: DB_PATH
+        value: /data/game.db
+      - key: PYTHON_VERSION
+        value: 3.12.3
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
